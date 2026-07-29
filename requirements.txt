@@ -1,8 +1,9 @@
 fastapi
 uvicorn
 jinja2
-openai
+python-dotenv
 tavily-python
 huggingface_hub
 pydantic
 groq
+
