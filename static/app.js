@@ -131,70 +131,83 @@ async function loadVisualNews() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+
+// --- MAIN DOM INITIALIZATION & EVENT LISTENERS ---
+
+function initApp() {
+    // Load external API feeds
+    loadBreakingNews();
+    loadVisualNews();
+
     const checkerForm = document.getElementById('checkerForm');
+    const newSearchBtn = document.getElementById('newSearchBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const loader = document.getElementById('loader');
 
-    // Locate the "New Search" button
-const newSearchBtn = document.getElementById('newSearchBtn');
+    // 1. "New Search" Button Click Handler
+    if (newSearchBtn) {
+        newSearchBtn.addEventListener('click', (e) => {
+            e.preventDefault();
 
-if (newSearchBtn) {
-    newSearchBtn.addEventListener('click', () => {
-        // 1. Clear the textarea / input box
-        const textInput = document.getElementById('article_text');
-        if (textInput) {
-            textInput.value = '';
-        }
+            // Clear input textarea
+            const textInput = document.getElementById('article_text');
+            if (textInput) {
+                textInput.value = '';
+            }
 
-        // 2. Hide the results container
-        const resultsContainer = document.getElementById('resultsContainer');
-        if (resultsContainer) {
-            resultsContainer.classList.add('hidden');
-        }
+            // Hide main results container
+            const resultsContainer = document.getElementById('resultsContainer');
+            if (resultsContainer) {
+                resultsContainer.classList.add('hidden');
+            }
 
-        // 3. Clear evidence list contents
-        const evidenceList = document.getElementById('evidenceList');
-        if (evidenceList) {
-            evidenceList.innerHTML = '';
-        }
+            // Clear evidence content
+            const evidenceList = document.getElementById('evidenceList');
+            if (evidenceList) {
+                evidenceList.innerHTML = '';
+            }
 
-        // 4. Optionally clear individual result fields
-        const elementsToClear = ['verdictBadge', 'confidenceScore', 'extractedClaim', 'summaryExplanation'];
-        elementsToClear.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = '';
+            // Clear individual text output fields
+            const elementsToClear = ['verdictBadge', 'confidenceScore', 'extractedClaim', 'summaryExplanation'];
+            elementsToClear.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '';
+            });
+
+            // Ensure Verify Claim button UI state is reset to default
+            if (submitBtn) submitBtn.disabled = false;
+            if (btnText) btnText.textContent = "Verify Claim";
+            if (loader) loader.classList.add('hidden');
+
+            // Focus and smooth scroll back to input area
+            if (textInput) {
+                textInput.focus();
+                textInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         });
+    }
 
-        // 5. Scroll back up smoothly to the text area
-        if (textInput) {
-            textInput.focus();
-            textInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    });
-}
+    // 2. Fact Check Form Submission Handler
     if (checkerForm) {
         checkerForm.addEventListener('submit', async (e) => {
-            // 1. THIS PREVENTS THE PAGE REFRESH
             e.preventDefault(); 
-
-            const submitBtn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('btnText');
-            const loader = document.getElementById('loader');
+            
             const resultsContainer = document.getElementById('resultsContainer');
-            const textInput = document.getElementById('article_text').value;
+            const textInput = document.getElementById('article_text')?.value;
 
             if (!textInput || textInput.trim().length < 10) {
                 alert("Please enter a claim with at least 10 characters.");
                 return;
             }
 
-            // 2. UI Loading State
-            submitBtn.disabled = true;
+            // UI Loading State on Verify Button
+            if (submitBtn) submitBtn.disabled = true;
             if (btnText) btnText.textContent = "Analyzing & Verifying...";
             if (loader) loader.classList.remove('hidden');
             if (resultsContainer) resultsContainer.classList.add('hidden');
 
             try {
-                // 3. Make backend API request without reloading
                 const response = await fetch('/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -207,50 +220,57 @@ if (newSearchBtn) {
 
                 const data = await response.json();
 
-                // 4. Update UI dynamically
-                document.getElementById('verdictBadge').textContent = data.verdict;
-                document.getElementById('confidenceScore').textContent = `${(data.confidence_score * 100).toFixed(1)}%`;
-                document.getElementById('extractedClaim').textContent = `"${data.extracted_claim}"`;
-                document.getElementById('summaryExplanation').textContent = data.summary_explanation;
+                // Update UI dynamically
+                if (document.getElementById('verdictBadge')) {
+                    document.getElementById('verdictBadge').textContent = data.verdict;
+                }
+                if (document.getElementById('confidenceScore')) {
+                    document.getElementById('confidenceScore').textContent = `${(data.confidence_score * 100).toFixed(1)}%`;
+                }
+                if (document.getElementById('extractedClaim')) {
+                    document.getElementById('extractedClaim').textContent = `"${data.extracted_claim}"`;
+                }
+                if (document.getElementById('summaryExplanation')) {
+                    document.getElementById('summaryExplanation').textContent = data.summary_explanation;
+                }
 
                 // Render evidence cards
                 const evidenceList = document.getElementById('evidenceList');
-                evidenceList.innerHTML = '';
+                if (evidenceList) {
+                    evidenceList.innerHTML = '';
 
-                (data.evidence_breakdown || []).forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-[#f2f7fc] border border-sky-100 p-4 rounded-lg space-y-2';
-                    card.innerHTML = `
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-bold">${item.nli_label}</span>
-                            <a href="${item.source_url}" target="_blank" class="text-indigo-600 hover:underline">Link</a>
-                        </div>
-                        <p class="text-xs text-slate-700 italic">"${item.snippet}"</p>
-                    `;
-                    evidenceList.appendChild(card);
-                });
+                    (data.evidence_breakdown || []).forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-[#f2f7fc] border border-sky-100 p-4 rounded-lg space-y-2';
+                        card.innerHTML = `
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold">${item.nli_label}</span>
+                                <a href="${item.source_url}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline">Link</a>
+                            </div>
+                            <p class="text-xs text-slate-700 italic">"${item.snippet}"</p>
+                        `;
+                        evidenceList.appendChild(card);
+                    });
+                }
 
-                resultsContainer.classList.remove('hidden');
+                if (resultsContainer) {
+                    resultsContainer.classList.remove('hidden');
+                }
 
             } catch (err) {
                 alert(`Verification failed: ${err.message}`);
             } finally {
-                submitBtn.disabled = false;
+                if (submitBtn) submitBtn.disabled = false;
                 if (btnText) btnText.textContent = "Verify Claim";
                 if (loader) loader.classList.add('hidden');
             }
         });
     }
-});
-// --- INITIALIZATION ---
+}
 
-// Trigger fetch immediately (handles cases where DOM is already interactive)
+// Single initialization entry point
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        loadBreakingNews();
-        loadVisualNews();
-    });
+    document.addEventListener('DOMContentLoaded', initApp);
 } else {
-    loadBreakingNews();
-    loadVisualNews();
+    initApp();
 }
