@@ -3,138 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time NLI Fact-Checker</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>NLI Fact-Checker Dashboard</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-[#dbe8f6] text-slate-800 min-h-screen font-sans antialiased p-4 lg:p-6">
+<body class="bg-slate-100 min-h-screen text-slate-800 font-sans antialiased">
 
-    <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-        <!-- LEFT COLUMN: Live Breaking Feed -->
-        <aside class="lg:col-span-3 space-y-4">
-            <div class="bg-white border border-sky-100 rounded-xl p-4 shadow-sm">
-                <div class="flex items-center justify-between border-b border-sky-100 pb-3 mb-3">
-                    <span class="text-xs font-bold text-sky-700 uppercase tracking-wider flex items-center gap-1.5">
-                        <span class="inline-block w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
-                        Breaking News
-                    </span>
-                    <span class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">● LIVE</span>
+    <!-- Top Navigation Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg flex items-center justify-center shadow-md">
+                    <i class="fa-solid me-1 fa-shield-halved text-xl"></i>
                 </div>
-
-                <div id="breakingNewsFeed" class="space-y-4 text-xs">
-                    <p class="text-slate-400 text-xs">Loading headlines...</p>
-                </div>
+                <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-sky-600 bg-clip-text text-transparent">
+                    NLI Fact-Checker Dashboard
+                </h1>
             </div>
-        </aside>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    <span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span> System Ready
+                </span>
+            </div>
+        </div>
+    </header>
 
-        <!-- CENTER COLUMN: Verification Tool -->
-        <main class="lg:col-span-6 space-y-6">
-            <div class="bg-white border border-sky-100 rounded-xl p-6 shadow-sm">
-                <header class="mb-5">
-                    <h1 class="text-2xl font-serif font-bold text-slate-900">Verify a Claim</h1>
-                    <p class="text-slate-500 text-sm mt-1">
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Sidebar: Live News Feed -->
+            <aside class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col h-fit">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                    <h2 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-newspaper text-indigo-500"></i>
+                        Live News Feed
+                    </h2>
+                    <span class="bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span> LIVE
+                    </span>
+                </div>
+
+                <!-- Feed Items List -->
+                <div id="newsFeedContainer" class="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+                    
+                    <div class="p-3.5 rounded-xl border border-slate-100 hover:border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-all cursor-pointer news-item">
+                        <div class="flex justify-between items-center text-xs text-slate-400 mb-1">
+                            <span>Politics</span>
+                            <span>1d ago</span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-700 line-clamp-2">
+                            Pralhad Joshi takes additional charge as India's Education Minister following Dharmendra Pradhan's resignation.
+                        </p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl border border-slate-100 hover:border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-all cursor-pointer news-item">
+                        <div class="flex justify-between items-center text-xs text-slate-400 mb-1">
+                            <span>Technology</span>
+                            <span>1d ago</span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-700 line-clamp-2">
+                            AI infrastructure deployment accelerates with serverless NLI and light LLM orchestration.
+                        </p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl border border-slate-100 hover:border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-all cursor-pointer news-item">
+                        <div class="flex justify-between items-center text-xs text-slate-400 mb-1">
+                            <span>Science</span>
+                            <span>2d ago</span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-700 line-clamp-2">
+                            New satellite meteorological data pipelines enhance solar energy forecasting accuracy.
+                        </p>
+                    </div>
+
+                </div>
+            </aside>
+
+            <!-- Main Interactive Claim Verification Area -->
+            <section class="lg:col-span-8 space-y-6">
+                
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200/80">
+                    <h2 class="text-3xl font-extrabold text-slate-900 mb-2 font-serif">
+                        Verify a Claim
+                    </h2>
+                    <p class="text-slate-500 mb-6 text-base">
                         Enter any statement, headline, or rumor to cross-reference it against live news sources.
                     </p>
-                </header>
 
-                <form id="checkerForm" class="space-y-4">
-                    <div>
-                        <textarea 
-                            id="article_text" 
-                            name="text" 
-                            rows="4" 
-                            class="w-full bg-[#f8fafc] border border-sky-200 rounded-lg p-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 text-sm transition-all resize-none"
-                            placeholder="e.g. The Great Wall of China is visible from space..." 
-                            required></textarea>
-                    </div>
-                    
-                    <div class="flex items-center gap-3">
-                        <button 
-                            type="submit" 
-                            id="submitBtn" 
-                            class="flex-1 bg-[#8faeeb] hover:bg-[#7b9de4] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
-                            <span id="btnText">Verify Claim</span>
-                            <div id="loader" class="hidden animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                        </button>
+                    <form id="verifyForm" class="space-y-4">
+                        <div>
+                            <textarea 
+                                id="claimInput" 
+                                rows="4" 
+                                class="w-full p-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none text-slate-700 placeholder-slate-400 transition-all resize-none font-medium"
+                                placeholder="e.g., Dharmendra Pradhan is education Minister of India?"
+                                required
+                            >Dharmendra Pradhan is education Minister of India?</textarea>
+                        </div>
+
+                        <!-- Button Action Row (UPDATED ORDER: New Search on Left, Verify on Right) -->
+                        <div class="flex items-center gap-4 mt-4">
+                            <!-- 1. New Search Button (Left) -->
+                            <button 
+                                type="button" 
+                                id="newSearchBtn"
+                                class="px-6 py-3 rounded-xl bg-sky-50 text-sky-600 hover:bg-sky-100 transition-colors font-medium text-center border border-sky-100"
+                            >
+                                New Search
+                            </button>
+
+                            <!-- 2. Verify Claim Button (Right / Primary CTA) -->
+                            <button 
+                                type="submit" 
+                                id="verifyBtn"
+                                class="flex-1 py-3 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-all shadow-sm text-center flex items-center justify-center gap-2"
+                            >
+                                <span id="btnText">Verify Claim</span>
+                                <i id="btnSpinner" class="fa-solid fa-circle-notch animate-spin hidden"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Suggested Claims Divider -->
+                    <div class="mt-8 pt-6 border-t border-slate-100">
+                        <span class="block text-center text-xs font-bold tracking-wider text-slate-400 uppercase mb-4">
+                            Suggested Claims
+                        </span>
                         
-                        <button 
-                            type="button" 
-                            id="newSearchBtn"
-                            class="bg-sky-50 text-sky-700 hover:bg-sky-100 font-medium py-2.5 px-4 rounded-lg text-sm transition-colors border border-sky-100">
-                            New Search
-                        </button>
-                    </div>
-                </form>
+                        <div class="space-y-3">
+                            <button class="suggested-claim-btn w-full text-left p-3.5 rounded-xl bg-slate-50/80 hover:bg-indigo-50/60 border border-slate-100 hover:border-indigo-100 text-slate-700 hover:text-indigo-700 transition-all flex items-center gap-3">
+                                <span class="text-sky-500 font-bold text-sm">01</span>
+                                <span class="text-sm font-medium">Did the moon landing really happen in 1969?</span>
+                            </button>
 
-                <div class="mt-8 pt-6 border-t border-sky-100">
-                    <div class="text-center mb-4">
-                        <span class="text-[11px] font-bold text-slate-400 tracking-wider uppercase bg-white px-3 relative -top-9">Suggested Claims</span>
-                    </div>
+                            <button class="suggested-claim-btn w-full text-left p-3.5 rounded-xl bg-slate-50/80 hover:bg-indigo-50/60 border border-slate-100 hover:border-indigo-100 text-slate-700 hover:text-indigo-700 transition-all flex items-center gap-3">
+                                <span class="text-sky-500 font-bold text-sm">02</span>
+                                <span class="text-sm font-medium">Is 5G technology linked to health risks?</span>
+                            </button>
 
-                    <div class="space-y-2 -mt-4">
-                        <button onclick="fillClaim(this.innerText)" class="w-full text-left p-3 rounded-lg bg-[#f2f7fc] hover:bg-sky-100 text-slate-700 text-sm font-medium transition-colors flex items-center gap-3 border border-sky-100">
-                            <span class="text-xs text-sky-400 font-bold">01</span>
-                            <span>Did the moon landing really happen in 1969?</span>
-                        </button>
-                        <button onclick="fillClaim(this.innerText)" class="w-full text-left p-3 rounded-lg bg-[#f2f7fc] hover:bg-sky-100 text-slate-700 text-sm font-medium transition-colors flex items-center gap-3 border border-sky-100">
-                            <span class="text-xs text-sky-400 font-bold">02</span>
-                            <span>Is 5G technology linked to health risks?</span>
-                        </button>
-                        <button onclick="fillClaim(this.innerText)" class="w-full text-left p-3 rounded-lg bg-[#f2f7fc] hover:bg-sky-100 text-slate-700 text-sm font-medium transition-colors flex items-center gap-3 border border-sky-100">
-                            <span class="text-xs text-sky-400 font-bold">03</span>
-                            <span>Is climate change caused by human activity?</span>
-                        </button>
+                            <button class="suggested-claim-btn w-full text-left p-3.5 rounded-xl bg-slate-50/80 hover:bg-indigo-50/60 border border-slate-100 hover:border-indigo-100 text-slate-700 hover:text-indigo-700 transition-all flex items-center gap-3">
+                                <span class="text-sky-500 font-bold text-sm">03</span>
+                                <span class="text-sm font-medium">Is climate change caused by human activity?</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Dynamic Verification Results Container -->
-            <section id="resultsContainer" class="hidden space-y-6">
-                <div class="bg-white border border-sky-100 rounded-xl p-6 shadow-sm">
-                    <div class="flex items-center justify-between border-b border-sky-100 pb-4 mb-4">
-                        <div>
-                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Verdict</span>
-                            <div id="verdictBadge" class="text-lg font-bold mt-1">--</div>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Confidence</span>
-                            <div id="confidenceScore" class="text-lg font-bold text-slate-700 mt-1">--</div>
-                        </div>
+                <!-- Results Output Card (Initially Hidden) -->
+                <div id="resultsCard" class="hidden bg-white p-8 rounded-2xl shadow-sm border border-slate-200/80 space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <h3 class="text-xl font-bold text-slate-900">Verification Report</h3>
+                        <span id="verdictBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"></span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold uppercase text-slate-400">Extracted Atomic Claim</h4>
+                        <p id="extractedClaimText" class="text-slate-800 font-medium bg-slate-50 p-3 rounded-lg border border-slate-100"></p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold uppercase text-slate-400">Summary Explanation</h4>
+                        <p id="summaryExplanationText" class="text-slate-600 leading-relaxed text-sm"></p>
                     </div>
 
                     <div class="space-y-3">
-                        <div>
-                            <span class="text-xs font-semibold text-slate-400">Extracted Atomic Claim:</span>
-                            <p id="extractedClaim" class="text-slate-800 font-medium italic bg-[#f2f7fc] p-3 rounded-md border border-sky-100 text-sm mt-1">--</p>
-                        </div>
-
-                        <div>
-                            <span class="text-xs font-semibold text-slate-400">Summary Reasoning:</span>
-                            <p id="summaryExplanation" class="text-slate-600 text-sm mt-1 leading-relaxed">--</p>
-                        </div>
+                        <h4 class="text-xs font-bold uppercase text-slate-400">Live Evidence Breakdown</h4>
+                        <div id="evidenceListContainer" class="space-y-3"></div>
                     </div>
                 </div>
 
-                <div class="bg-white border border-sky-100 rounded-xl p-6 shadow-sm">
-                    <h2 class="text-lg font-bold text-slate-900 mb-4">Live Evidence Breakdown</h2>
-                    <div id="evidenceList" class="space-y-4"></div>
-                </div>
             </section>
-        </main>
+        </div>
+    </main>
 
-        <!-- RIGHT COLUMN: Visual News Feed Cards -->
-        <aside class="lg:col-span-3 space-y-4">
-            <div class="text-xs font-bold text-sky-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <span>Visual News Feed</span>
-            </div>
-            <div id="visualNewsFeed" class="space-y-4">
-                <p class="text-slate-400 text-xs">Loading visual feed...</p>
-            </div>
-        </aside>
-
-    </div>
-
+    <!-- Custom Frontend Application Script -->
     <script src="/static/app.js"></script>
 </body>
 </html>
