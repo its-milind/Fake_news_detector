@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+jinja2
+openai
+tavily-python
+huggingface_hub
+pydantic
+groq
