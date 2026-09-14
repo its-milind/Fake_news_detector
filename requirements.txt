@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+jinja2
+python-dotenv
+tavily-python
+huggingface_hub
+pydantic
+groq
+
